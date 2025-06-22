@@ -10,7 +10,7 @@ const patientSchema = new mongoose.Schema({
         dateRecorded: {type: Date, default: Date.now},
         notes: String
     }],
-    assignedDoctor: {type: mongoose.Schema.Types.ObjectId, ref: "Doctor", required: true},
+    assignedDoctor: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
     preferredLanguage: {type: String, default: "English"},
     communicationPreference: {type: String, enum: ['SMS', 'Voice', 'USSD'], default: 'SMS'}
 

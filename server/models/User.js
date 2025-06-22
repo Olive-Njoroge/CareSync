@@ -1,7 +1,7 @@
 //Authentication
 const mongoose = require('mongoose');
 
-const doctorSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     role: {type: String, enum: ["doctor", "admin", "nurse"], default: "doctor"},
@@ -10,4 +10,4 @@ const doctorSchema = new mongoose.Schema({
 },{timestamps: true}
 );
 
-module.exports = mongoose.model("Doctor", doctorSchema);
+module.exports = mongoose.model("User", doctorSchema);

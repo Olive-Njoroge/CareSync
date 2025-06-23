@@ -6,12 +6,13 @@ const User = require('../models/User');
 //Signup Endpoint Logic
 exports.signUp = async (req, res) => {
     try{
-        const {email, password} = req.body;
+        const { email, password, name, phoneNumber, role } = req.body;
         const exists = await User.findOne({email});
         if(exists) return res.status(400).json({Message: "User already exists"});
 
         const hashedPassword = await bcrypt.hash(password, 10);    //Hashing the password
-        const user = await User.create({email, password: hashedPassword});
+        const user = await User.create({email, password: hashedPassword, phoneNumber,
+            role, name});
 
         const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, { expiresIn: '1h' }); // or '7d' for 7 days for expiresIn
         res.json({token, user: {email: user.email, role: user.role}});

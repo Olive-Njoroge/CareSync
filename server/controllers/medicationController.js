@@ -1,62 +1,62 @@
-const MedicationReminder = require('../models/MedicationReminder');
+const Medication = require('../models/Medication');
 
-// Create a new medication reminder
-exports.createReminder = async (req, res) => {
+// Create a new medication
+exports.createMedication = async (req, res) => {
     try {
-        const reminder = await MedicationReminder.create(req.body);
-        res.status(201).json(reminder);
+        const medication = await Medication.create(req.body);
+        res.status(201).json(medication);
     } catch (error) {
-        res.status(400).json({ message: "Failed to create reminder", error: error.message });
+        res.status(400).json({ message: "Failed to create medication", error: error.message });
     }
 };
 
-// Get all medication reminders
-exports.getAllReminders = async (req, res) => {
+// Get all medications
+exports.getAllMedications = async (req, res) => {
     try {
-        const reminders = await MedicationReminder.find()
+        const medications = await Medication.find()
             .populate('patient')
             .populate('doctor');
-        res.json(reminders);
+        res.json(medications);
     } catch (error) {
-        res.status(500).json({ message: "Failed to fetch reminders", error: error.message });
+        res.status(500).json({ message: "Failed to fetch medications", error: error.message });
     }
 };
 
-// Get a single medication reminder by ID
-exports.getReminderById = async (req, res) => {
+// Get a single medication by ID
+exports.getMedicationById = async (req, res) => {
     try {
-        const reminder = await MedicationReminder.findById(req.params.id)
+        const medication = await Medication.findById(req.params.id)
             .populate('patient')
             .populate('doctor');
-        if (!reminder) return res.status(404).json({ message: "Reminder not found" });
-        res.json(reminder);
+        if (!medication) return res.status(404).json({ message: "Medication not found" });
+        res.json(medication);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching reminder", error: error.message });
+        res.status(500).json({ message: "Error fetching medication", error: error.message });
     }
 };
 
-// Update a medication reminder
-exports.updateReminder = async (req, res) => {
+// Update a medication
+exports.updateMedication = async (req, res) => {
     try {
-        const updated = await MedicationReminder.findByIdAndUpdate(
+        const updated = await Medication.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         );
-        if (!updated) return res.status(404).json({ message: "Reminder not found" });
+        if (!updated) return res.status(404).json({ message: "Medication not found" });
         res.json(updated);
     } catch (error) {
-        res.status(400).json({ message: "Failed to update reminder", error: error.message });
+        res.status(400).json({ message: "Failed to update medication", error: error.message });
     }
 };
 
-// Delete a medication reminder
-exports.deleteReminder = async (req, res) => {
+// Delete a medication
+exports.deleteMedication = async (req, res) => {
     try {
-        const deleted = await MedicationReminder.findByIdAndDelete(req.params.id);
-        if (!deleted) return res.status(404).json({ message: "Reminder not found" });
-        res.json({ message: "Reminder deleted successfully" });
+        const deleted = await Medication.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ message: "Medication not found" });
+        res.json({ message: "Medication deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Failed to delete reminder", error: error.message });
+        res.status(500).json({ message: "Failed to delete medication", error: error.message });
     }
 };

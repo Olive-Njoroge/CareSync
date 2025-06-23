@@ -14,8 +14,8 @@ exports.createAppointment = async (req, res) => {
 exports.getAllAppointments = async (req, res) => {
     try {
         const appointments = await Appointment.find()
-            .populate('patient')
-            .populate('doctor');
+            .populate('patient', 'name phoneNumber')  // only populate name & phone
+            .populate('doctor', 'name email');        // only populate name & email
         res.json(appointments);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch appointments", error: error.message });
@@ -26,8 +26,8 @@ exports.getAllAppointments = async (req, res) => {
 exports.getAppointmentById = async (req, res) => {
     try {
         const appointment = await Appointment.findById(req.params.id)
-            .populate('patient')
-            .populate('doctor');
+            .populate('patient', 'name phoneNumber')
+            .populate('doctor', 'name email');
         if (!appointment) return res.status(404).json({ message: "Appointment not found" });
         res.json(appointment);
     } catch (error) {

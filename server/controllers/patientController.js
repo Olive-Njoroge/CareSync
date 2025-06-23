@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const Patient = require('../models/Patient');
 
 // POST: Create new patient
@@ -6,7 +5,7 @@ exports.createPatient = async (req, res) => {
     try {
         const patient = await Patient.create({
             ...req.body,
-            owner: req.user.id  // ensure req.user is set by auth middleware
+            owner: req.user.id
         });
         res.status(201).json(patient);
     } catch (error) {
@@ -14,10 +13,11 @@ exports.createPatient = async (req, res) => {
     }
 };
 
-// GET: Get all patients owned by logged-in user
+// GET: Get all patients owned by the logged-in user (with doctor info)
 exports.getPatients = async (req, res) => {
     try {
-        const patients = await Patient.find({ owner: req.user.id });
+        const patients = await Patient.find({ owner: req.user.id })
+            .populate('assignedDoctor', 'name email'); // show only doctor name & email
         res.json(patients);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch patients", error: error.message });
@@ -27,17 +27,11 @@ exports.getPatients = async (req, res) => {
 // GET: Find patient by nationalId OR phoneNumber OR _id
 exports.findPatient = async (req, res) => {
     const { identifier } = req.params;
-
     try {
-        let patient = await Patient.findOne({ nationalId: identifier });
-
-        if (!patient) {
-            patient = await Patient.findOne({ phoneNumber: identifier });
-        }
-
-        if (!patient && mongoose.Types.ObjectId.isValid(identifier)) {
-            patient = await Patient.findById(identifier);
-        }
+        let patient =
+            await Patient.findOne({ nationalId: identifier }) ||
+            await Patient.findOne({ phoneNumber: identifier }) ||
+            (await Patient.findById(identifier));
 
         if (!patient) {
             return res.status(404).json({ message: "Patient not found" });

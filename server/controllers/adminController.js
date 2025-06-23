@@ -11,8 +11,8 @@ exports.getDashboardStats = async (req, res) => {
         const totalNurses = await User.countDocuments({ role: 'nurse' });
         const totalAdmins = await User.countDocuments({ role: 'admin' });
 
-        const upcomingAppointments = await Appointment.countDocuments({ date: { $gte: new Date() } });
-        const pastAppointments = await Appointment.countDocuments({ date: { $lt: new Date() } });
+        const upcomingAppointments = await Appointment.countDocuments({ appointmentDate: { $gte: new Date() } });
+        const pastAppointments = await Appointment.countDocuments({ appointmentDate: { $lt: new Date() } });
 
         res.json({
             totalPatients,
@@ -49,7 +49,7 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-// Get appointments by status (e.g. completed, missed)
+// Get appointments by status (e.g. completed, missed, cancelled)
 exports.getAppointmentsByStatus = async (req, res) => {
     const { status } = req.params;
     try {
